@@ -39,7 +39,7 @@ class ErrorBoundary extends React.PureComponent {
 class Loading extends React.PureComponent {
     render() {
         return (
-            <div className="text-center">
+            <div className="text-center mt-4">
               <div className="spinner-border" role="status">
                 <span className="sr-only">Loading...</span>
               </div>
@@ -61,17 +61,25 @@ class ImageDetails extends React.PureComponent {
     async componentDidMount() {
         const { params } = this.props.match;
         try {
-            const descriptionCID = REGISTRY_CID + '/' + params.image  + '/' + 'README-short.txt';
-            const chunks = [];
+            const imagePath = REGISTRY_CID + '/' + params.image;
+            const descriptionPath =  imagePath + '/' + 'README-short.txt';
+            const tagsPath = imagePath + '/' + 'tags';
 
-            for await (const chunk of this.props.ipfs.cat(descriptionCID)) {
+            const chunks = [];
+            for await (const chunk of this.props.ipfs.cat(descriptionPath)) {
                 chunks.push(chunk);
             }
             const description = Buffer.concat(chunks).toString();
 
+            const tags = [];
+            for await (const tag of this.props.ipfs.ls(tagsPath)) {
+                tags.push(tag.name)
+            }
+
             this.setState({image: {
                 name: params.image,
                 description: description,
+                tags: tags,
             }});
         } catch (error) {
             this.setState({error: error});
@@ -83,10 +91,39 @@ class ImageDetails extends React.PureComponent {
             throw this.state.error;
         }
         if (this.state.image) {
+            const tagsCardStyle = {
+                width: '18rem',
+            };
+            const commandsCardStyle = {
+                width: '34rem',
+            };
             return (
-                <div>
-                    <h1>{this.state.image.name}</h1>
-                    <h2>{this.state.image.description}</h2>
+                <div className="row">
+                    <div className="col-6">
+                        <h2>{this.state.image.name}</h2>
+                        {this.state.image.description}
+                        <div className="card mt-4" style={tagsCardStyle}>
+                            <div className="card-header">
+                                Tags
+                            </div>
+                            <ul className="list-group list-group-flush">
+                                {this.state.image.tags.map(tag => (
+                                    <li className="list-group-item" key={tag}>{tag}</li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+                    <div className="col-6">
+                        <div className="card">
+                            <div className="card-body">
+                                <h5 className="card-title">Pull commands</h5>
+                                    <small className="card-text text-monospace">
+                                        $ ipfs get -o {this.state.image.name}:latest /ipns/containers.zanko.dev/{this.state.image.name}/tags/latest<br/>
+                                        $ tar --strip-components 1 -cf - {this.state.image.name}:latest | docker load
+                                    </small>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             );
         }
