@@ -6,7 +6,7 @@ InterPlanetary Container Registry (IPCR) is like [Docker Hub](https://hub.docker
 For more details, see [ipcr/ipcr](https://github.com/ipcr/ipcr).
 This project implements Web frontend for IPCR.
 
-Live demo is [on Fleek](https://plain-shape-4058.on.fleek.co/)!
+Live demo is [on Fleek](https://ipcr.on.fleek.co/)!
 
 The project was started at [HackFS](https://hackfs.com). HackFS is a virtual Hackathon by ETHGlobal and Protocol Labs.
 
