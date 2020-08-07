@@ -12,7 +12,7 @@ import IPFS from 'ipfs';
 // I could not get ipfs.resolve('/ipns/QmTw9u8R3FCh2DR1t6PvkWibVnZXJfujzEKV2o4SRrTPLV') working in a browser.
 // See https://github.com/ipfs/js-ipfs/issues/2921 for more details.
 // Therefore, I had to hardcode container registry CID here and update it every time I update the registry.
-const REGISTRY_CID = '/ipfs/QmTHQCVUNgKPTncgw4t1EuhHhxrL4kPLWSkEgyx3pmpRoo'
+const REGISTRY_CID = '/ipfs/Qme3owZLfyus9kW3Rx9x2VoH1MvUAtUDi2qRgk4uVPwek3'
 
 class ErrorBoundary extends React.PureComponent {
     constructor(props) {
